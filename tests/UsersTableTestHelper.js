@@ -33,7 +33,7 @@ const UsersTableTestHelper = {
   },
 
   async addUserPasswordHash({
-    id = "user-1234",
+    id = "user-123",
     username = "dicoding123",
     password = "secret",
     fullname = "Dicoding Indonesia",

@@ -6,7 +6,7 @@ const ThreadTableTestHelper = {
     title = "Add Thread",
     body = "This first Thread",
     owner = "user-123",
-    created_at = new Date().toISOString,
+    created_at = new Date().toISOString(),
   }) {
     const query = {
       text: "INSERT INTO threads(id, title, body, owner, created_at) values($1, $2, $3, $4, $5)",

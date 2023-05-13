@@ -5,7 +5,7 @@ const CommentsTableTestHelper = {
     id = "comment-123",
     content = "This is my first comment",
     owner = "user-123",
-    created_at = new Date().toISOString,
+    created_at = new Date().toISOString(),
     thread_id = "thread-123",
   }) {
     const is_delete = false;

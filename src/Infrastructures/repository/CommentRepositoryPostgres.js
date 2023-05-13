@@ -24,27 +24,27 @@ class CommentRepositoryPostgres extends CommentRepository {
     return new AddedComment({ ...result.rows[0] });
   }
 
-  async deleteComment(commentId) {
+  async deleteComment(commentId, owner) {
     const id_delete = true;
-    const query = {
-      text: "update comments set is_delete = $1 where id = $2 returning id, content",
-      values: [id_delete, commentId],
+
+    const checkCommentQuery = {
+      text: "SELECT * FROM comments where id = $1",
+      values: [commentId],
     };
 
-    const result = await this._pool.query(query);
+    const resultCheckComment = await this._pool.query(checkCommentQuery);
 
-    if (result.rows.length < 1) {
+    if (resultCheckComment.rows.length < 1) {
       throw new NotFoundError("comment not found");
     }
-  }
 
-  async isCommentOwner(commentId, owner) {
     const query = {
-      text: "SELECT id, content, owner FROM comments WHERE id = $1 AND owner = $2",
-      values: [commentId, owner],
+      text: "update comments set is_delete = $1 where id = $2 AND owner= $3 returning id, content",
+      values: [id_delete, commentId, owner],
     };
 
     const result = await this._pool.query(query);
+
     if (result.rows.length < 1) {
       throw new AuthorizationError("you do not have access to these resources");
     }
