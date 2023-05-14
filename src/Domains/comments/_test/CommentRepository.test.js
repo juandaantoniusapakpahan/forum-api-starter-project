@@ -17,7 +17,7 @@ describe("CommentRepository interface", () => {
       "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
     await expect(
-      commentRepository.deleteComment(commentId)
+      commentRepository.deleteComment(commentId, owner)
     ).rejects.toThrowError("COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   });
 });
