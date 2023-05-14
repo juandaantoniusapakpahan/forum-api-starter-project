@@ -31,6 +31,7 @@ describe("GetThread entities response", () => {
       "GET_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION"
     );
   });
+
   it("should return getthread correctly", () => {
     // Arrange
     const payload = {
