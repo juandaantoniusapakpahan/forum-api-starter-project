@@ -6,18 +6,15 @@ describe("CommentRepository interface", () => {
     // Arrange
     const commentRepository = new CommentRepository();
 
-    const payload = {
-      content: "Example",
-    };
-    const commentId = "comment-123";
-    const owner = "user-1234";
-
     // Acction & Assert
-    await expect(commentRepository.addComment(payload)).rejects.toThrowError(
+    await expect(commentRepository.addComment({})).rejects.toThrowError(
+      "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+    await expect(commentRepository.deleteComment("", "")).rejects.toThrowError(
       "COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
     await expect(
-      commentRepository.deleteComment(commentId, owner)
+      commentRepository.getCommentsByThreadId("")
     ).rejects.toThrowError("COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED");
   });
 });

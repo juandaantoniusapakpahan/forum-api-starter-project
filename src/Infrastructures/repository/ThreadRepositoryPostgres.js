@@ -49,30 +49,8 @@ class ThreadRepositoryPostgres extends ThreadRepository {
     if (threadResult.rows.length < 1) {
       throw new NotFoundError("thread not found");
     }
-    const thread = new GetThread({ ...threadResult.rows[0] });
 
-    // cm.content
-    const commentQuery = {
-      text: `SELECT cm.id, usr.username, cm.created_at as date, 
-      CASE 
-      WHEN cm.is_delete = true then '**komentar telah dihapus**'
-      WHEN cm.is_delete = false then cm.content
-      END as content
-      FROM comments cm
-      JOIN users usr ON cm.owner = usr.id WHERE thread_id = $1
-      ORDER BY cm.created_at ASC`,
-      values: [threadId],
-    };
-
-    const commentQueryResult = await this._pool.query(commentQuery);
-
-    const comments = [];
-    for (let i = 0; i < commentQueryResult.rows.length; i++) {
-      comments.push(new GetComment({ ...commentQueryResult.rows[i] }));
-    }
-
-    thread.comments = comments;
-    return thread;
+    return new GetThread({ ...threadResult.rows[0] });
   }
 }
 

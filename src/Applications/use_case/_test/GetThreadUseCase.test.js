@@ -1,3 +1,4 @@
+const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const GetComment = require("../../../Domains/comments/entities/GetComment");
 const ThreadRepository = require("../../../Domains/thread/ThreadRepository");
 const GetThread = require("../../../Domains/thread/entities/GetThread");
@@ -7,7 +8,7 @@ describe("GetThreadUseCase", () => {
   it("should orchestrating the get thread action correctly", async () => {
     // Arrange
     const thread = new GetThread({
-      id: "1234",
+      id: "123",
       title: "sebuah thread",
       body: "sebuah body",
       date: "2023-05-14",
@@ -21,19 +22,49 @@ describe("GetThreadUseCase", () => {
     });
 
     thread.comments = [comment];
+    const expectedValue = thread;
 
     const threadId = "thread-123";
     const mockThreadRepository = new ThreadRepository();
-    mockThreadRepository.getThread = jest
+    const mockCommentRepository = new CommentRepository();
+    mockThreadRepository.getThread = jest.fn().mockImplementation(() =>
+      Promise.resolve(
+        new GetThread({
+          id: "123",
+          title: "sebuah thread",
+          body: "sebuah body",
+          date: "2023-05-14",
+          username: "unknow",
+        })
+      )
+    );
+
+    mockCommentRepository.getCommentsByThreadId = jest
       .fn()
-      .mockImplementation(() => Promise.resolve(thread));
+      .mockImplementation(() =>
+        Promise.resolve([
+          new GetComment({
+            id: "comment-_pby2_tmXV6bcvcdev8xk",
+            username: "johndoe",
+            date: "2021-08-08T07:22:33.555Z",
+            content: "sebuah comment",
+          }),
+        ])
+      );
+
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
     });
+
     // Action
     const result = await getThreadUseCase.execute(threadId);
+
     // Assert
     expect(mockThreadRepository.getThread).toBeCalledWith(threadId);
-    expect(result).toStrictEqual(thread);
+    expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
+      threadId
+    );
+    expect(result).toStrictEqual(expectedValue);
   });
 });

@@ -37,11 +37,11 @@ describe("AddedThread entities", () => {
     };
 
     // Action
-    const addedTrhead = new AddedThread(threadPayload);
+    const addedThread = new AddedThread(threadPayload);
 
     // Assert
-    expect(addedTrhead.id).toEqual(threadPayload.id);
-    expect(addedTrhead.title).toEqual(threadPayload.title);
-    expect(addedTrhead.owner).toEqual(threadPayload.owner);
+    expect(addedThread.id).toEqual(threadPayload.id);
+    expect(addedThread.title).toEqual(threadPayload.title);
+    expect(addedThread.owner).toEqual(threadPayload.owner);
   });
 });

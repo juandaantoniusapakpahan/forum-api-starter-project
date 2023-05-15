@@ -1,5 +1,3 @@
-const { payload } = require("@hapi/hapi/lib/validation");
-
 class AddThread {
   constructor(payload) {
     this._verifyPayload(payload);

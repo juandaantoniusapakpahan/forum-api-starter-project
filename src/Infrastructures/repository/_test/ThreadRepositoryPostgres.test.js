@@ -34,31 +34,14 @@ describe("ThreadRepositoryPostgres", () => {
       );
 
       // Acction
-      await threadRepository.addThread(fakeUserId, threadPayload);
+      const addedThred = await threadRepository.addThread(
+        fakeUserId,
+        threadPayload
+      );
 
       // Assert
       const result = await ThreadTableTestHelper.findThreadById("thread-1234");
       expect(result.length).toEqual(1);
-    });
-
-    it("should return addedThread  correctly", async () => {
-      // Arrange
-      const payload = new AddThread({
-        title: "First Thread",
-        body: "do what do you wanna to do",
-      });
-
-      const stubIdGenerator = () => "1234"; // stub
-      const fakeUserId = "user-123";
-      const threadRepository = new ThreadRepositoryPostgres(
-        pool,
-        stubIdGenerator
-      );
-
-      // Action
-      const addedThred = await threadRepository.addThread(fakeUserId, payload);
-
-      // Assert
       expect(addedThred).toStrictEqual(
         new AddedThread({
           id: "thread-1234",
@@ -98,7 +81,7 @@ describe("ThreadRepositoryPostgres", () => {
     });
   });
 
-  describe("getThreads function", () => {
+  describe("getThread function", () => {
     it("should throw an error when thread not found", async () => {
       // Arrange
       const threadId = "thread-unknow";
@@ -119,18 +102,28 @@ describe("ThreadRepositoryPostgres", () => {
     it("should not throw NotFoundError when thread found", async () => {
       // Arrange
       const threadId = "thread-123";
-      await ThreadTableTestHelper.addThread({ id: threadId });
-      await UsersTableTestHelper.addUser({ id: "user-123" });
+      await UsersTableTestHelper.addUser({
+        id: "user-123",
+        username: "dicoding",
+      });
+
+      await ThreadTableTestHelper.addThread({
+        id: threadId,
+        title: "INA2 PUBGM",
+        owner: "user-123",
+      });
+
       const threadRepository = new ThreadRepositoryPostgres(pool, {});
-      await CommentsTableTestHelper.addComment({ thread_id: threadId });
 
       // Action
       const thread = await threadRepository.getThread(threadId);
 
       // Assert
       expect(thread).not.toEqual(null);
-      expect(thread.id).not.toEqual(null);
-      expect(thread.username).not.toEqual(null);
+      expect(thread.id).toEqual(threadId);
+      expect(thread.username).toEqual("dicoding");
+      expect(thread.title).toEqual("INA2 PUBGM");
+      expect(thread.username).toEqual("dicoding");
     });
   });
 });

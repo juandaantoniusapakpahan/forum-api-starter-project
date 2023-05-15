@@ -1,4 +1,4 @@
-const AddTread = require("../AddThread");
+const AddThread = require("../AddThread");
 
 describe("AddTread entities", () => {
   it("should throw an error when payload not contain needed property", () => {
@@ -8,7 +8,7 @@ describe("AddTread entities", () => {
     };
 
     // Action & Assert
-    expect(() => new AddTread(payload)).toThrowError(
+    expect(() => new AddThread(payload)).toThrowError(
       "ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY"
     );
   });
@@ -21,7 +21,7 @@ describe("AddTread entities", () => {
     };
 
     // Action & Assert
-    expect(() => new AddTread(payload)).toThrowError(
+    expect(() => new AddThread(payload)).toThrowError(
       "ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION"
     );
   });
@@ -34,7 +34,7 @@ describe("AddTread entities", () => {
     };
 
     // Action
-    const addThread = new AddTread(payload);
+    const addThread = new AddThread(payload);
 
     // Assert
     expect(addThread.body).toEqual(payload.body);
