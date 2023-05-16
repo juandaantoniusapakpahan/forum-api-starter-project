@@ -20,7 +20,13 @@ exports.up = (pgm) => {
       type: "VARCHAR(50)",
       notNull: true,
     },
+    is_delete: {
+      type: "bool",
+      notNull: true,
+    },
   });
 };
 
-exports.down = (pgm) => {};
+exports.down = (pgm) => {
+  pgm.dropTable("replies");
+};

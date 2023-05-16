@@ -6,7 +6,7 @@ describe("RepliesRepository interface", () => {
     const repliesRepository = new RepliesRepository();
 
     // Action & Assert
-    await expect(repliesRepository.addReplies({})).rejects.toThrowError(
+    await expect(repliesRepository.addReplies("", "", {})).rejects.toThrowError(
       "REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
   });
