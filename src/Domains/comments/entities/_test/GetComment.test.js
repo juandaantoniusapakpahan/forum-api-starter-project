@@ -7,6 +7,7 @@ describe("GetComment entities response", () => {
       username: "jokowilly",
       date: "2023-05-15",
       content: "sebuah content",
+      is_delete: false,
     };
 
     // Action & Assert
@@ -21,6 +22,7 @@ describe("GetComment entities response", () => {
       username: 2131,
       date: "2023-05-15",
       content: "sebuah content",
+      is_delete: false,
     };
 
     // Action & Assert
@@ -28,22 +30,39 @@ describe("GetComment entities response", () => {
       "GET_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION"
     );
   });
-  it("should get comment correctly", () => {
+  it("should get comment correctly when is_delete value is false ", () => {
     // Arrange
-    const paylaod = {
+    const payload = {
       id: "1212321",
       username: "COKO",
       date: "2023-05-15",
       content: "sebuah content",
+      is_delete: false,
     };
 
     // Action
-    const result = new GetComment(paylaod);
+    const result = new GetComment(payload);
 
     // Assert
-    expect(result.id).toEqual(paylaod.id);
-    expect(result.username).toEqual(paylaod.username);
-    expect(result.date).toEqual(paylaod.date);
-    expect(result.content).toEqual(paylaod.content);
+    expect(result.id).toEqual(payload.id);
+    expect(result.username).toEqual(payload.username);
+    expect(result.date).toEqual(payload.date);
+    expect(result.content).toEqual(payload.content);
+  });
+  it("should return **komentar telah dihapus** on content when is_delete value is true", () => {
+    // Arrange
+    const payload = {
+      id: "1212321",
+      username: "COKO",
+      date: "2023-05-15",
+      content: "sebuah content",
+      is_delete: true,
+    };
+
+    // Action
+    const result = new GetComment(payload);
+
+    // Assert
+    expect(result.content).toEqual("**komentar telah dihapus**");
   });
 });

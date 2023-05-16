@@ -25,23 +25,34 @@ class CommentRepositoryPostgres extends CommentRepository {
     return new AddedComment({ ...result.rows[0] });
   }
 
-  async deleteComment(commentId, owner) {
-    const id_delete = true;
-
-    const checkCommentQuery = {
+  async verifyCommentIsExists(commentId) {
+    const query = {
       text: "SELECT * FROM comments where id = $1",
       values: [commentId],
     };
 
-    const resultCheckComment = await this._pool.query(checkCommentQuery);
+    const result = await this._pool.query(query);
 
-    if (resultCheckComment.rows.length < 1) {
+    if (result.rows.length < 1) {
       throw new NotFoundError("comment not found");
     }
+  }
+
+  async deleteComment(commentId, owner) {
+    const id_delete = true;
 
     const query = {
       text: "update comments set is_delete = $1 where id = $2 AND owner= $3 returning id, content",
       values: [id_delete, commentId, owner],
+    };
+
+    await this._pool.query(query);
+  }
+
+  async isAuthorized(commentId, owner) {
+    const query = {
+      text: "SELECT * FROM comments WHERE id = $1 AND owner = $2",
+      values: [commentId, owner],
     };
 
     const result = await this._pool.query(query);
@@ -53,11 +64,7 @@ class CommentRepositoryPostgres extends CommentRepository {
 
   async getCommentsByThreadId(threadId) {
     const commentQuery = {
-      text: `SELECT cm.id, usr.username, cm.created_at as date, 
-      CASE 
-      WHEN cm.is_delete = true then '**komentar telah dihapus**'
-      WHEN cm.is_delete = false then cm.content
-      END as content
+      text: `SELECT cm.id, usr.username, cm.created_at as date, content, is_delete
       FROM comments cm
       JOIN users usr ON cm.owner = usr.id WHERE thread_id = $1
       ORDER BY cm.created_at ASC`,

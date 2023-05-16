@@ -1,11 +1,11 @@
 class GetComment {
   constructor(payload) {
     this._verifyPayload(payload);
-    const { id, username, date, content } = payload;
+    const { id, username, date, content, is_delete } = payload;
     this.id = id;
     this.username = username;
     this.date = date;
-    this.content = content;
+    this.content = is_delete === true ? "**komentar telah dihapus**" : content;
   }
 
   _verifyPayload({ id, username, date, content }) {
