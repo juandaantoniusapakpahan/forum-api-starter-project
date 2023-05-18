@@ -9,5 +9,18 @@ describe("RepliesRepository interface", () => {
     await expect(repliesRepository.addReplies("", "", {})).rejects.toThrowError(
       "REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
+    await expect(repliesRepository.getReplies("")).rejects.toThrowError(
+      "REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+
+    await expect(repliesRepository.isAuthorized("", "")).rejects.toThrowError(
+      "REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
+    await expect(
+      repliesRepository.verifyRepliesIsExists("")
+    ).rejects.toThrowError("REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED");
+    await expect(repliesRepository.delete("")).rejects.toThrowError(
+      "REPLIES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
   });
 });

@@ -119,7 +119,7 @@ describe("CommentRepositoryPostgres", () => {
     });
   });
 
-  describe("verifyCommentIsExists functoin", () => {
+  describe("verifyCommentIsExists function", () => {
     it("should throw an error (NotFoundError) when comment not found", async () => {
       // Arrange
       const commentId = "comment-unknow";
