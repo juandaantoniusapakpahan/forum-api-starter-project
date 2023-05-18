@@ -42,9 +42,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       data: { accessToken },
     } = responseJson;
     token = accessToken;
-    // await UsersTableTestHelper.addUser({id:"user-124", username:"dicodingtwo"})
-    // await ThreadTableTestHelper.addThread({id:"thread-123", owner:"user-123"})
-    // await CommentsTableTestHelper.addComment({id:"comment-123", thread_id: "thread-123", owner: "user-124"})
   });
 
   describe("POST /threads/{threadId}/comments/{commentId}/replies", () => {
@@ -122,7 +119,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       );
     });
 
-    it("should response  404 and status fail when thread not found", async () => {
+    it("should response 404 and status fail when thread not found", async () => {
       // Arrange
       const payload = {
         content: "I do not like your comment",
@@ -159,7 +156,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       expect(responseJson.message).toEqual("thread not found");
     });
 
-    it("should response  404 and status fail when thread not found", async () => {
+    it("should response 404 and status fail when comment not found", async () => {
       // Arrange
       const payload = {
         content: "I do not like your comment",
