@@ -233,4 +233,133 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       expect(addedReply).toBeDefined(); // .toBeDefined to check that a variable is not undefined
     });
   });
+
+  describe("DELETE /threads/{threadId}/comments/{commentId}/replies/{replyId}", () => {
+    it("should response 404 and status fail when thread not found", async () => {
+      // Arrange
+      const threadId = "thread-2323";
+      const commentId = "comment-4432";
+      const replyId = "replies-9980";
+      await ThreadTableTestHelper.addThread({ id: "thread-7743" });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: "DELETE",
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual("fail");
+      expect(responseJson.message).toEqual("thread not found");
+    });
+
+    it("should response 404 and status fail when comment not found", async () => {
+      // Arrange
+      const threadId = "thread-2323";
+      const commentId = "comment-4432";
+      const replyId = "replies-9980";
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentsTableTestHelper.addComment({ id: "comment-3204" });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: "DELETE",
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual("fail");
+      expect(responseJson.message).toEqual("comment not found");
+    });
+
+    it("should response 404 and status fail when replies not found", async () => {
+      // Arrange
+      const threadId = "thread-2323";
+      const commentId = "comment-4432";
+      const replyId = "replies-9980";
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentsTableTestHelper.addComment({
+        id: commentId,
+        thread_id: threadId,
+      });
+      await RepliesTableTestHelper.addReplies({ id: "replies-8343" });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: "DELETE",
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual("fail");
+      expect(responseJson.message).toEqual("replies not found");
+    });
+
+    it("should response 403 when user is not owner", async () => {
+      // Arrange
+      const threadId = "thread-2323";
+      const commentId = "comment-4432";
+      const replyId = "replies-9980";
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentsTableTestHelper.addComment({
+        id: commentId,
+        thread_id: threadId,
+      });
+      await RepliesTableTestHelper.addReplies({ id: replyId });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: "DELETE",
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(403);
+      expect(responseJson.status).toEqual("fail");
+    });
+
+    it("should response 200 and delete reply correctly", async () => {
+      // Arrange
+      const threadId = "thread-2323";
+      const commentId = "comment-4432";
+      const replyId = "replies-9980";
+      await ThreadTableTestHelper.addThread({ id: threadId });
+      await CommentsTableTestHelper.addComment({
+        id: commentId,
+        thread_id: threadId,
+      });
+      await RepliesTableTestHelper.addReplies({
+        id: replyId,
+        owner: "user-12345",
+      });
+      const server = await createServer(container);
+
+      // Action
+      const response = await server.inject({
+        method: "DELETE",
+        url: `/threads/${threadId}/comments/${commentId}/replies/${replyId}`,
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(200);
+      expect(responseJson.status).toEqual("success");
+    });
+  });
 });

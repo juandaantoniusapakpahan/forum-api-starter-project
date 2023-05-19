@@ -34,6 +34,7 @@ const GetThreadUseCase = require("../Applications/use_case/GetThreadUseCase");
 const RepliesRepository = require("../Domains/replies/RepliesRepository");
 const RepliesRepositoryPostgres = require("./repository/RepliesRepositoryPostgres");
 const AddRepliesUseCase = require("../Applications/use_case/AddRepliesUseCase");
+const DeleteRepliesUseCase = require("../Applications/use_case/DeleteRepliesUseCase");
 
 // creating container
 const container = createContainer();
@@ -276,6 +277,27 @@ container.register([
   {
     key: AddRepliesUseCase.name,
     Class: AddRepliesUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
+        },
+        {
+          name: "repliesRepository",
+          internal: RepliesRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: DeleteRepliesUseCase.name,
+    Class: DeleteRepliesUseCase,
     parameter: {
       injectType: "destructuring",
       dependencies: [

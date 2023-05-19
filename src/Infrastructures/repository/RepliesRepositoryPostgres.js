@@ -31,7 +31,8 @@ class RepliesRepositoryPostgres extends RepliesRepository {
       text: `SELECT rp.id, rp.content, rp.created_at date, usr.username, rp.is_delete, rp.comment_id FROM replies rp
       LEFT JOIN comments cm ON rp.comment_id = cm.id
       LEFT JOIN users usr ON rp.owner = usr.id 
-      WHERE cm.thread_id = $1`,
+      WHERE cm.thread_id = $1
+      ORDER BY rp.created_at ASC`,
       values: [threadId],
     };
 
