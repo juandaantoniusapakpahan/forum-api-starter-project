@@ -22,12 +22,24 @@ describe("CommentRepositoryPostgres", () => {
   describe("addComment function", () => {
     it("should persist add comment and return added comment correctly", async () => {
       // Arrange
+      await UsersTableTestHelper.addUser({
+        id: "user-asdfad",
+        username: "asdfasdlfml",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: "thread-sdfnsa",
+        owner: "user-asdfad",
+      });
+      await UsersTableTestHelper.addUser({
+        id: "user-sdfnasgasd",
+        username: "asdasdfasdf",
+      });
       const payload = new AddComment({
         content: "This is my first comment",
       });
       const stubIdGenator = () => "123";
-      const threadId = "thread-123";
-      const owner = "user-123";
+      const threadId = "thread-sdfnsa";
+      const owner = "user-sdfnasgasd";
 
       const commentRepositoryPostgres = new CommentRepositoryPostgres(
         pool,

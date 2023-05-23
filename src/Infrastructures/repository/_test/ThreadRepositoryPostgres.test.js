@@ -6,12 +6,14 @@ const AddedThread = require("../../../Domains/thread/entities/AddedThread");
 const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
+const RepliesTableTestHelper = require("../../../../tests/RepliesTableTestHelper");
 
 describe("ThreadRepositoryPostgres", () => {
   afterEach(async () => {
     await ThreadTableTestHelper.cleanTableThread();
     await CommentsTableTestHelper.cleanComment();
     await UsersTableTestHelper.cleanTable();
+    await RepliesTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
@@ -100,9 +102,14 @@ describe("ThreadRepositoryPostgres", () => {
     it("should throw an error when thread not found", async () => {
       // Arrange
       const threadId = "thread-unknow";
-      await ThreadTableTestHelper.addThread({});
-      await UsersTableTestHelper.addUser({ id: "user-123" });
-      await CommentsTableTestHelper.addComment({ thread_id: threadId });
+      await UsersTableTestHelper.addUser({
+        id: "user-asfklas",
+        username: "ggwpaof",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: "thread-nasdfnas",
+        owner: "user-asfklas",
+      });
       const threadRepository = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert

@@ -5,6 +5,7 @@ const container = require("../../container");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
+const RepliesTableTestHelper = require("../../../../tests/RepliesTableTestHelper");
 
 describe("/threads end point", () => {
   afterEach(async () => {
@@ -189,15 +190,15 @@ describe("/threads end point", () => {
         thread_id: "thread-dsnfjn",
         owner: "user-asdjnsasdf",
       });
-      await CommentsTableTestHelper.addComment({
-        id: "comment-124",
-        owner: "comment-sdnfjnsdf",
-        thread_id: "thread-dsnfjn",
+      await RepliesTableTestHelper.addReplies({
+        id: "replies-124",
+        comment_id: "comment-sdnfjnsdf",
+        owner: "user-asdjnsd",
       });
-      await CommentsTableTestHelper.addComment({
-        id: "comment-125",
-        owner: "comment-sdnfjnsdf",
-        thread_id: "thread-dsnfjn",
+      await RepliesTableTestHelper.addReplies({
+        id: "replies-125",
+        comment_id: "comment-sdnfjnsdf",
+        owner: "user-asdjnsd",
       });
       const server = await createServer(container);
 

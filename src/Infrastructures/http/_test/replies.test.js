@@ -51,6 +51,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const payload = {};
       const threadId = "thread-123";
       const commentId = "comment-123";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-12346",
         username: "dicodingtwo",
@@ -65,7 +67,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         owner: "user-12346",
       });
       const server = await createServer(container);
-      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -89,6 +90,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const payload = { content: 1234 };
       const threadId = "thread-123";
       const commentId = "comment-123";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-12346",
         username: "dicodingtwo",
@@ -104,7 +107,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
 
       const server = await createServer(container);
-      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -130,6 +132,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       };
       const threadId = "thread-unknow";
       const commentId = "comment-123";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-12346",
         username: "papale",
@@ -145,7 +149,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
 
       const server = await createServer(container);
-      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -169,6 +172,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       };
       const threadId = "thread-123";
       const commentId = "comment-unknow";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-12346",
         username: "papale",
@@ -184,7 +189,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
 
       const server = await createServer(container);
-      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -208,6 +212,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       };
       const threadId = "thread-123";
       const commentId = "comment-123";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-12346",
         username: "papale",
@@ -222,7 +228,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         thread_id: "thread-123",
       });
 
-      const token = await getToken();
       const server = await createServer(container);
 
       // Aciton
@@ -250,13 +255,14 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-4432";
       const replyId = "replies-9980";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({ id: "user-93sjer" });
       await ThreadTableTestHelper.addThread({
         id: "thread-7743",
         owner: "user-93sjer",
       });
       const server = await createServer(container);
-      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -276,6 +282,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-4432";
       const replyId = "replies-9980";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-asdfjnse",
         username: "ggogsdfns",
@@ -290,7 +298,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         thread_id: "thread-2323",
       });
       const server = await createServer(container);
-      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -310,6 +317,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-3204";
       const replyId = "replies-9980";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-asdfjnse",
         username: "ggogsdfns",
@@ -321,7 +330,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       await CommentsTableTestHelper.addComment({
         id: "comment-3204",
         owner: "user-asdfjnse",
-        thread_id: "user-123jj",
+        thread_id: "thread-2323",
       });
       await RepliesTableTestHelper.addReplies({
         id: "replies-8343",
@@ -329,7 +338,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         comment_id: "comment-3204",
       });
       const server = await createServer(container);
-      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -349,6 +357,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-3204";
       const replyId = "replies-8343";
+      const token = await getToken();
 
       await UsersTableTestHelper.addUser({
         id: "user-asdfjnse",
@@ -365,7 +374,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       await CommentsTableTestHelper.addComment({
         id: "comment-3204",
         owner: "user-asdfjnse",
-        thread_id: "user-123jj",
+        thread_id: threadId,
       });
       await RepliesTableTestHelper.addReplies({
         id: "replies-8343",
@@ -373,7 +382,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         comment_id: "comment-3204",
       });
       const server = await createServer(container);
-      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -392,6 +400,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-3204";
       const replyId = "replies-8343";
+      const token = await getToken();
+
       await UsersTableTestHelper.addUser({
         id: "user-asdfjnse",
         username: "ggogsdfns",
@@ -403,7 +413,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       await CommentsTableTestHelper.addComment({
         id: "comment-3204",
         owner: "user-asdfjnse",
-        thread_id: "user-123jj",
+        thread_id: threadId,
       });
       await RepliesTableTestHelper.addReplies({
         id: "replies-8343",
@@ -411,7 +421,6 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         comment_id: "comment-3204",
       });
       const server = await createServer(container);
-      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
