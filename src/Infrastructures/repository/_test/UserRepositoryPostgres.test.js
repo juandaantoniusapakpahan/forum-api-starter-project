@@ -17,12 +17,15 @@ describe("UserRepositoryPostgres", () => {
   describe("verifyAvailableUsername function", () => {
     it("should throw InvariantError when username not available", async () => {
       // Arrange
-      await UsersTableTestHelper.addUser({ username: "dicoding" }); // memasukan user baru dengan username dicoding
+      await UsersTableTestHelper.addUser({
+        id: "user-sdfsdkmsd",
+        username: "sdfsfsfsdf",
+      }); // memasukan user baru dengan username dicoding
       const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
 
       // Action & Assert
       await expect(
-        userRepositoryPostgres.verifyAvailableUsername("dicoding")
+        userRepositoryPostgres.verifyAvailableUsername("sdfsfsfsdf")
       ).rejects.toThrowError(InvariantError);
     });
 
@@ -32,7 +35,7 @@ describe("UserRepositoryPostgres", () => {
 
       // Action & Assert
       await expect(
-        userRepositoryPostgres.verifyAvailableUsername("dicoding")
+        userRepositoryPostgres.verifyAvailableUsername("smdfsfsvjsdnf")
       ).resolves.not.toThrowError(InvariantError);
     });
   });

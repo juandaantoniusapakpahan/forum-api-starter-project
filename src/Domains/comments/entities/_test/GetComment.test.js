@@ -42,11 +42,12 @@ describe("GetComment entities response", () => {
 
     // Action
     const result = new GetComment(payload);
+    const dateConvert = new Date(payload.date).toISOString();
 
     // Assert
     expect(result.id).toEqual(payload.id);
     expect(result.username).toEqual(payload.username);
-    expect(result.date).toEqual(payload.date);
+    expect(result.date).toEqual(dateConvert);
     expect(result.content).toEqual(payload.content);
   });
   it("should return **komentar telah dihapus** on content when is_delete value is true", () => {

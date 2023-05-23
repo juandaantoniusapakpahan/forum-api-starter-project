@@ -4,7 +4,7 @@ class GetReplies {
     const { id, content, date, username, is_delete } = payload;
     this.id = id;
     this.content = is_delete === true ? "**balasan telah dihapus**" : content;
-    this.date = date;
+    this.date = new Date(date).toISOString();
     this.username = username;
   }
 
@@ -15,7 +15,6 @@ class GetReplies {
     if (
       typeof id !== "string" ||
       typeof content !== "string" ||
-      typeof date !== "string" ||
       typeof username !== "string"
     ) {
       throw new Error("GET_REPLIES.NOT_MEET_DATA_TYPE_SPECIFICATION");

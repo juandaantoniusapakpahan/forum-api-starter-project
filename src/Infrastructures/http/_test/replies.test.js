@@ -1,3 +1,4 @@
+const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const RepliesTableTestHelper = require("../../../../tests/RepliesTableTestHelper");
 const ThreadTableTestHelper = require("../../../../tests/ThreadTableTestHelper");
@@ -12,20 +13,20 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
     await UsersTableTestHelper.cleanTable();
     await CommentsTableTestHelper.cleanComment();
     await ThreadTableTestHelper.cleanTableThread();
+    await AuthenticationsTableTestHelper.cleanTable();
   });
 
   afterAll(async () => {
     await pool.end();
   });
 
-  let token = "";
-  beforeAll(async () => {
+  async function getToken() {
     const payloadLogin = {
       username: "dicodingone",
       password: "secret",
     };
     await UsersTableTestHelper.addUserPasswordHash({
-      id: "user-12345",
+      id: "user-123jj",
       username: "dicodingone",
       password: "secret",
     });
@@ -41,8 +42,8 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
     const {
       data: { accessToken },
     } = responseJson;
-    token = accessToken;
-  });
+    return accessToken;
+  }
 
   describe("POST /threads/{threadId}/comments/{commentId}/replies", () => {
     it("should response 400 and status fail when payload did not contain needed property", async () => {
@@ -56,7 +57,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
       await ThreadTableTestHelper.addThread({
         id: "thread-123",
-        owner: "user-12345",
+        owner: "user-123jj",
       });
       await CommentsTableTestHelper.addComment({
         id: "comment-123",
@@ -64,6 +65,7 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
         owner: "user-12346",
       });
       const server = await createServer(container);
+      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -93,14 +95,16 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
       await ThreadTableTestHelper.addThread({
         id: "thread-123",
-        owner: "user-12345",
+        owner: "user-123jj",
       });
       await CommentsTableTestHelper.addComment({
         id: "comment-123",
         thread_id: "thread-123",
         owner: "user-12346",
       });
+
       const server = await createServer(container);
+      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -132,14 +136,16 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
       await ThreadTableTestHelper.addThread({
         id: "thread-123",
-        owner: "user-12345",
+        owner: "user-123jj",
       });
       await CommentsTableTestHelper.addComment({
         id: "comment-123",
         owner: "user-12346",
+        thread_id: "thread-123",
       });
 
       const server = await createServer(container);
+      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -169,14 +175,16 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
       await ThreadTableTestHelper.addThread({
         id: "thread-123",
-        owner: "user-12345",
+        owner: "user-123jj",
       });
       await CommentsTableTestHelper.addComment({
         id: "comment-123",
         owner: "user-12346",
+        thread_id: "thread-123",
       });
 
       const server = await createServer(container);
+      const token = await getToken();
 
       // Aciton
       const response = await server.inject({
@@ -206,13 +214,15 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       });
       await ThreadTableTestHelper.addThread({
         id: "thread-123",
-        owner: "user-12345",
+        owner: "user-123jj",
       });
       await CommentsTableTestHelper.addComment({
         id: "comment-123",
         owner: "user-12346",
+        thread_id: "thread-123",
       });
 
+      const token = await getToken();
       const server = await createServer(container);
 
       // Aciton
@@ -240,9 +250,13 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-4432";
       const replyId = "replies-9980";
-      await ThreadTableTestHelper.addThread({ id: "thread-7743" });
+      await UsersTableTestHelper.addUser({ id: "user-93sjer" });
+      await ThreadTableTestHelper.addThread({
+        id: "thread-7743",
+        owner: "user-93sjer",
+      });
       const server = await createServer(container);
-
+      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -262,10 +276,21 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
       const threadId = "thread-2323";
       const commentId = "comment-4432";
       const replyId = "replies-9980";
-      await ThreadTableTestHelper.addThread({ id: threadId });
-      await CommentsTableTestHelper.addComment({ id: "comment-3204" });
+      await UsersTableTestHelper.addUser({
+        id: "user-asdfjnse",
+        username: "ggogsdfns",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: threadId,
+        owner: "user-123jj",
+      });
+      await CommentsTableTestHelper.addComment({
+        id: "comment-3204",
+        owner: "user-asdfjnse",
+        thread_id: "thread-2323",
+      });
       const server = await createServer(container);
-
+      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -283,16 +308,28 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
     it("should response 404 and status fail when replies not found", async () => {
       // Arrange
       const threadId = "thread-2323";
-      const commentId = "comment-4432";
+      const commentId = "comment-3204";
       const replyId = "replies-9980";
-      await ThreadTableTestHelper.addThread({ id: threadId });
-      await CommentsTableTestHelper.addComment({
-        id: commentId,
-        thread_id: threadId,
+      await UsersTableTestHelper.addUser({
+        id: "user-asdfjnse",
+        username: "ggogsdfns",
       });
-      await RepliesTableTestHelper.addReplies({ id: "replies-8343" });
+      await ThreadTableTestHelper.addThread({
+        id: threadId,
+        owner: "user-123jj",
+      });
+      await CommentsTableTestHelper.addComment({
+        id: "comment-3204",
+        owner: "user-asdfjnse",
+        thread_id: "user-123jj",
+      });
+      await RepliesTableTestHelper.addReplies({
+        id: "replies-8343",
+        owner: "user-123jj",
+        comment_id: "comment-3204",
+      });
       const server = await createServer(container);
-
+      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -310,16 +347,33 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
     it("should response 403 when user is not owner", async () => {
       // Arrange
       const threadId = "thread-2323";
-      const commentId = "comment-4432";
-      const replyId = "replies-9980";
-      await ThreadTableTestHelper.addThread({ id: threadId });
-      await CommentsTableTestHelper.addComment({
-        id: commentId,
-        thread_id: threadId,
-      });
-      await RepliesTableTestHelper.addReplies({ id: replyId });
-      const server = await createServer(container);
+      const commentId = "comment-3204";
+      const replyId = "replies-8343";
 
+      await UsersTableTestHelper.addUser({
+        id: "user-asdfjnse",
+        username: "ggogsdfns",
+      });
+      await UsersTableTestHelper.addUser({
+        id: "user-sdmsdkfns",
+        username: "asseknalsng",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: threadId,
+        owner: "user-123jj",
+      });
+      await CommentsTableTestHelper.addComment({
+        id: "comment-3204",
+        owner: "user-asdfjnse",
+        thread_id: "user-123jj",
+      });
+      await RepliesTableTestHelper.addReplies({
+        id: "replies-8343",
+        owner: "user-sdmsdkfns",
+        comment_id: "comment-3204",
+      });
+      const server = await createServer(container);
+      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",
@@ -336,19 +390,28 @@ describe("/threads/{threadId}/comments/{commentId}/replies endpoint", () => {
     it("should response 200 and delete reply correctly", async () => {
       // Arrange
       const threadId = "thread-2323";
-      const commentId = "comment-4432";
-      const replyId = "replies-9980";
-      await ThreadTableTestHelper.addThread({ id: threadId });
+      const commentId = "comment-3204";
+      const replyId = "replies-8343";
+      await UsersTableTestHelper.addUser({
+        id: "user-asdfjnse",
+        username: "ggogsdfns",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: threadId,
+        owner: "user-123jj",
+      });
       await CommentsTableTestHelper.addComment({
-        id: commentId,
-        thread_id: threadId,
+        id: "comment-3204",
+        owner: "user-asdfjnse",
+        thread_id: "user-123jj",
       });
       await RepliesTableTestHelper.addReplies({
-        id: replyId,
-        owner: "user-12345",
+        id: "replies-8343",
+        owner: "user-123jj",
+        comment_id: "comment-3204",
       });
       const server = await createServer(container);
-
+      const token = await getToken();
       // Action
       const response = await server.inject({
         method: "DELETE",

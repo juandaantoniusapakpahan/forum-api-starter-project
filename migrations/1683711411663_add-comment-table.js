@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 exports.up = (pgm) => {
   pgm.createTable("comments", {
     id: {
@@ -14,8 +12,17 @@ exports.up = (pgm) => {
       type: "VARCHAR(50)",
       notNull: true,
     },
+    thread_id: {
+      type: "VARCHAR(50)",
+    },
+    is_delete: {
+      type: "bool",
+      notNull: true,
+    },
     created_at: {
-      type: "TEXT",
+      type: "timestamp",
+      notNull: true,
+      default: pgm.func("current_timestamp"),
     },
   });
 };

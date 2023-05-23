@@ -44,12 +44,13 @@ describe("GetThread entities response", () => {
 
     // Action
     const getThread = new GetThread(payload);
+    const dateConvert = new Date(payload.date).toISOString();
 
     // Assert
     expect(getThread.id).toEqual(payload.id);
     expect(getThread.title).toEqual(payload.title);
     expect(getThread.body).toEqual(payload.body);
-    expect(getThread.date).toEqual(payload.date);
+    expect(getThread.date).toEqual(dateConvert);
     expect(getThread.username).toEqual(payload.username);
   });
 });

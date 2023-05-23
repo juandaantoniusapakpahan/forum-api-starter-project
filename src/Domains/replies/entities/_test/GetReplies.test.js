@@ -44,11 +44,12 @@ describe("GetReplies entities", () => {
 
     // Action
     const { id, content, date, username } = new GetReplies(payload);
+    const dateConvert = new Date(payload.date).toISOString();
 
     // Assert
     expect(id).toEqual(payload.id);
     expect(content).toEqual(payload.content);
-    expect(date).toEqual(payload.date);
+    expect(date).toEqual(dateConvert);
     expect(username).toEqual(payload.username);
   });
 

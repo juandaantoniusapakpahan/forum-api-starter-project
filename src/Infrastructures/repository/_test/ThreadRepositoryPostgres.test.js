@@ -26,7 +26,11 @@ describe("ThreadRepositoryPostgres", () => {
         body: "Thread is mine",
       });
       const stubIdGenerator = () => "1234"; // stub
-      const fakeUserId = "user-123";
+      await UsersTableTestHelper.addUser({
+        id: "user-ndfkjasn",
+        username: "asdfnjs",
+      });
+      const fakeUserId = "user-ndfkjasn";
 
       const threadRepository = new ThreadRepositoryPostgres(
         pool,
@@ -46,7 +50,7 @@ describe("ThreadRepositoryPostgres", () => {
         new AddedThread({
           id: "thread-1234",
           title: "First Thread",
-          owner: "user-123",
+          owner: "user-ndfkjasn",
         })
       );
     });
@@ -56,7 +60,14 @@ describe("ThreadRepositoryPostgres", () => {
     it("should throw an error when thread id did not found", async () => {
       // Arrange
       const threadId = "unknow-1234";
-      await ThreadTableTestHelper.addThread({ id: "thread-123" });
+      await UsersTableTestHelper.addUser({
+        id: "user-12ijsd",
+        username: "sfasdfn",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: "thread-123",
+        owner: "user-12ijsd",
+      });
       const threadRepository = new ThreadRepositoryPostgres(pool, {});
 
       // Action & Assert
@@ -71,8 +82,12 @@ describe("ThreadRepositoryPostgres", () => {
     it("should not throw an error when thread id was found", async () => {
       // Arrange
       const threadId = "thread-123";
+      await UsersTableTestHelper.addUser({
+        id: "user-sdfasdf",
+        username: "dfaksndfjk",
+      });
       const threadRepository = new ThreadRepositoryPostgres(pool, {});
-      await ThreadTableTestHelper.addThread({});
+      await ThreadTableTestHelper.addThread({ owner: "user-sdfasdf" });
 
       // Action & Assert
       await expect(threadRepository.checkThread(threadId)).resolves.not.toThrow(
