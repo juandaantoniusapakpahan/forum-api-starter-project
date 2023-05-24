@@ -14,16 +14,13 @@ class GetThreadUseCase {
     );
     const repliesArr = await this._repliesRepository.getReplies(threadId);
 
-    for (let i = 0; i < getComments.length; i++) {
-      let repliesIns = [];
-      for (let j = 0; j < repliesArr.length; j++) {
-        if (repliesArr[j].comment_id === getComments[i].id) {
-          repliesIns.push(new GetReplies({ ...repliesArr[j] }));
-        }
-      }
-      getComments[i].replies = repliesIns;
-    }
-    thread.comments = getComments;
+    thread.comments = getComments.map((comment) => {
+      comment.replies = repliesArr
+        .filter((reply) => reply.comment_id === comment.id)
+        .map((reply) => new GetReplies(reply));
+      return comment;
+    });
+
     return thread;
   }
 }

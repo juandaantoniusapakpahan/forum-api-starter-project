@@ -11,7 +11,7 @@ class CommentRepositoryPostgres extends CommentRepository {
     this._idGenerator = idGenerator;
   }
 
-  async addComment(owner, threadId, payload) {
+  async addComment(payload, owner, threadId) {
     const content = payload.content;
     const id = `comment-${this._idGenerator()}`;
     let created_at = new Date().toISOString();
@@ -22,7 +22,7 @@ class CommentRepositoryPostgres extends CommentRepository {
       values: [id, content, owner, created_at, threadId, is_delete],
     };
     const result = await this._pool.query(query);
-    return new AddedComment({ ...result.rows[0] });
+    return new AddedComment(result.rows[0]);
   }
 
   async verifyCommentIsExists(commentId) {
@@ -72,11 +72,11 @@ class CommentRepositoryPostgres extends CommentRepository {
     };
 
     const commentQueryResult = await this._pool.query(commentQuery);
+    let commentResult = commentQueryResult.rows;
 
-    const comments = [];
-    for (let i = 0; i < commentQueryResult.rows.length; i++) {
-      comments.push(new GetComment({ ...commentQueryResult.rows[i] }));
-    }
+    let comments = commentResult.map((comment) => {
+      return new GetComment({ ...comment });
+    });
 
     return comments;
   }

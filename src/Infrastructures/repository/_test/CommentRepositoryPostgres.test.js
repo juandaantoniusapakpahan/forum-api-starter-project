@@ -7,6 +7,7 @@ const NotFoundError = require("../../../Commons/exceptions/NotFoundError");
 const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const AuthorizationError = require("../../../Commons/exceptions/AuthorizationError");
 const ThreadTableTestHelper = require("../../../../tests/ThreadTableTestHelper");
+const GetComment = require("../../../Domains/comments/entities/GetComment");
 
 describe("CommentRepositoryPostgres", () => {
   afterEach(async () => {
@@ -22,6 +23,9 @@ describe("CommentRepositoryPostgres", () => {
   describe("addComment function", () => {
     it("should persist add comment and return added comment correctly", async () => {
       // Arrange
+      const threadId = "thread-sdfnsa";
+      const owner = "user-sdfnasgasd";
+
       await UsersTableTestHelper.addUser({
         id: "user-asdfad",
         username: "asdfasdlfml",
@@ -34,12 +38,14 @@ describe("CommentRepositoryPostgres", () => {
         id: "user-sdfnasgasd",
         username: "asdasdfasdf",
       });
-      const payload = new AddComment({
-        content: "This is my first comment",
-      });
+      const payload = new AddComment(
+        {
+          content: "This is my first comment",
+        },
+        owner,
+        threadId
+      );
       const stubIdGenator = () => "123";
-      const threadId = "thread-sdfnsa";
-      const owner = "user-sdfnasgasd";
 
       const commentRepositoryPostgres = new CommentRepositoryPostgres(
         pool,
@@ -48,9 +54,9 @@ describe("CommentRepositoryPostgres", () => {
 
       // Action
       const addedComment = await commentRepositoryPostgres.addComment(
+        payload,
         owner,
-        threadId,
-        payload
+        threadId
       );
 
       // Assert
@@ -146,7 +152,6 @@ describe("CommentRepositoryPostgres", () => {
 
       // Action
       const comments = await commentRepository.getCommentsByThreadId(threadId);
-
       // Assert
       expect(comments).not.toEqual(null);
       expect(comments[0].id).toEqual("comment-asdfasd");
