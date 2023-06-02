@@ -46,7 +46,7 @@ describe("HTTP server", () => {
       // Action
       const response = await server.inject({
         method: "GET",
-        url: "/check-hello",
+        url: "/",
       });
 
       // Assert
