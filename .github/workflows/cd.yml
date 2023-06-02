@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          scrip: |
+          script: |
             cd ~/forum-api-starter-project
             git pull origin master
             npm install
