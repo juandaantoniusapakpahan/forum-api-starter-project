@@ -1,6 +1,7 @@
 const ThreadRepository = require("../../../Domains/thread/ThreadRepository");
 const CommentRepository = require("../../../Domains/comments/CommentRepository");
 const LikeRepository = require("../../../Domains/likes/LikeRepository");
+const UpdateLikeUseCase = require("../UpdateLikeUseCase");
 
 describe("UpdateLikeUseCase", () => {
   it("should orchestrating updatelike action correctly", async () => {
