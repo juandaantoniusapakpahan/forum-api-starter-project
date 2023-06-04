@@ -6,6 +6,7 @@ const UsersTableTestHelper = require("../../../../tests/UsersTableTestHelper");
 const CommentsTableTestHelper = require("../../../../tests/CommentsTableTestHelper");
 const AuthenticationsTableTestHelper = require("../../../../tests/AuthenticationsTableTestHelper");
 const RepliesTableTestHelper = require("../../../../tests/RepliesTableTestHelper");
+const LikesTableTestHelper = require("../../../../tests/LikesTableTestHelper");
 
 describe("/threads end point", () => {
   afterEach(async () => {
@@ -200,6 +201,12 @@ describe("/threads end point", () => {
         comment_id: "comment-sdnfjnsdf",
         owner: "user-asdjnsd",
       });
+
+      await LikesTableTestHelper.updateLike({
+        id: "like-asp8ua8as",
+        comment_id: "comment-sdnfjnsdf",
+        owner: "user-asdjnsd",
+      });
       const server = await createServer(container);
 
       // Action
@@ -213,7 +220,8 @@ describe("/threads end point", () => {
       expect(response.statusCode).toEqual(200);
       expect(responseJson.status).toEqual("success");
       expect(responseJson.data).not.toEqual(null);
-      expect(responseJson.data.comments).not.toEqual(null);
+      expect(responseJson.data.thread.comments).not.toEqual(null);
+      expect(responseJson.data.thread.comments[0].likeCount).toEqual(1);
     });
   });
 });

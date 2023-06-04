@@ -17,7 +17,7 @@ describe("LikeRepository Implement", () => {
     await pool.end();
   });
 
-  describe("isLike functioni", () => {
+  describe("isLike function", () => {
     it("should add like correctly", async () => {
       // Arrange
       await UsersTableTestHelper.addUser({
@@ -85,7 +85,6 @@ describe("LikeRepository Implement", () => {
       const result = await LikesTableTestHelper.findLike(commentId, owner);
       expect(result[0].is_like).toEqual(false);
     });
-
     it("should udate dislike to like correctly", async () => {
       // Arrange
       await UsersTableTestHelper.addUser({
@@ -116,6 +115,69 @@ describe("LikeRepository Implement", () => {
       // Assert
       const result = await LikesTableTestHelper.findLike(commentId, owner);
       expect(result[0].is_like).toEqual(true);
+    });
+  });
+  describe("getLikeCount function", () => {
+    it("should count like base on comment id", async () => {
+      // Arrange
+      await UsersTableTestHelper.addUser({
+        id: "user-poaisfa89",
+        username: "askdfas",
+      });
+      await ThreadTableTestHelper.addThread({
+        id: "thread-adsfasdpoi98",
+        owner: "user-poaisfa89",
+      });
+
+      await UsersTableTestHelper.addUser({
+        id: "user-sdua09s9sa",
+        username: "apoisdfajnas",
+      });
+
+      await CommentsTableTestHelper.addComment({
+        id: "comment-sopdija98s",
+        thread_id: "thread-adsfasdpoi98",
+        owner: "user-poaisfa89",
+      });
+
+      await CommentsTableTestHelper.addComment({
+        id: "comment-dasoi09",
+        thread_id: "thread-adsfasdpoi98",
+        owner: "user-sdua09s9sa",
+      });
+
+      await LikesTableTestHelper.updateLike({
+        id: "like-asi0asdpo09",
+        comment_id: "comment-sopdija98s",
+        owner: "user-poaisfa89",
+      });
+      await LikesTableTestHelper.updateLike({
+        id: "like-sjfpas8u89ase",
+        comment_id: "comment-dasoi09",
+        owner: "user-poaisfa89",
+      });
+
+      await LikesTableTestHelper.updateLike({
+        id: "like-asi0asdpaeraer",
+        comment_id: "comment-sopdija98s",
+        owner: "user-sdua09s9sa",
+      });
+      await LikesTableTestHelper.updateLike({
+        id: "like-sjfpas8u89aewrqa3",
+        comment_id: "comment-dasoi09",
+        owner: "user-sdua09s9sa",
+      });
+      const likeRespositoryPostgres = new LikeRepositoryPostgres(pool, {});
+
+      // Action
+      const result = await likeRespositoryPostgres.getLikeCount();
+
+      // Assert
+      expect(result.length).toEqual(2);
+      expect(result[0].comment_id).toEqual("comment-dasoi09");
+      expect(result[0].likecount).toEqual("2");
+      expect(result[1].comment_id).toEqual("comment-sopdija98s");
+      expect(result[1].likecount).toEqual("2");
     });
   });
 });

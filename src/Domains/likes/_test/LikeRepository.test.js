@@ -9,5 +9,9 @@ describe("likesrepository interface", () => {
     expect(likesRepository.isLike("", "")).rejects.toThrowError(
       "LIKES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
     );
+
+    expect(likesRepository.getLikeCount()).rejects.toThrowError(
+      "LIKES_REPOSITORY.METHOD_NOT_IMPLEMENTED"
+    );
   });
 });
