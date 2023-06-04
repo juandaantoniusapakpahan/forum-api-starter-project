@@ -35,6 +35,9 @@ const RepliesRepository = require("../Domains/replies/RepliesRepository");
 const RepliesRepositoryPostgres = require("./repository/RepliesRepositoryPostgres");
 const AddRepliesUseCase = require("../Applications/use_case/AddRepliesUseCase");
 const DeleteRepliesUseCase = require("../Applications/use_case/DeleteRepliesUseCase");
+const LikeRepository = require("../Domains/likes/LikeRepository");
+const LikeRepositoryPostgres = require("./repository/LikeRepositoryPostgres");
+const UpdateLikeUseCase = require("../Applications/use_case/UpdateLikeUseCase");
 
 // creating container
 const container = createContainer();
@@ -119,6 +122,20 @@ container.register([
   {
     key: RepliesRepository.name,
     Class: RepliesRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
+        },
+        {
+          concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
     parameter: {
       dependencies: [
         {
@@ -312,6 +329,27 @@ container.register([
         {
           name: "repliesRepository",
           internal: RepliesRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: UpdateLikeUseCase.name,
+    Class: UpdateLikeUseCase,
+    parameter: {
+      injectType: "destructuring",
+      dependencies: [
+        {
+          name: "threadRepository",
+          internal: ThreadRepository.name,
+        },
+        {
+          name: "commentRepository",
+          internal: CommentRepository.name,
+        },
+        {
+          name: "likeRepository",
+          internal: LikeRepository.name,
         },
       ],
     },
