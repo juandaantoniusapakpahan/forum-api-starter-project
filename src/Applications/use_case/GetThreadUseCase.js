@@ -21,13 +21,12 @@ class GetThreadUseCase {
     const repliesArr = await this._repliesRepository.getReplies(threadId);
     const getLikeCount = await this._likeRepository.getLikeCount();
 
-    var count = {};
     thread.comments = getComments.map((comment) => {
       comment.replies = repliesArr
         .filter((reply) => reply.comment_id === comment.id)
         .map((reply) => new GetReplies(reply));
 
-      count = getLikeCount.find((like) => like.comment_id === comment.id);
+      var count = getLikeCount.find((like) => like.comment_id === comment.id);
       comment.likeCount =
         count === undefined ? 0 : parseInt(count["likecount"]);
       return comment;

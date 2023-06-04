@@ -23,6 +23,13 @@ describe("GetThreadUseCase", () => {
       date: "2021-08-08T07:22:33.555Z",
       content: "sebuah comment",
     });
+    const comment2 = new GetComment({
+      id: "comment-_pby2_tmXV6bcvcdev8asdfa",
+      username: "JOIJ",
+      date: "2021-08-08T07:22:33.555Z",
+      content: "sebuah comment",
+    });
+
     const repliesExpect = new GetReplies({
       id: "1231231",
       content: "content",
@@ -30,14 +37,11 @@ describe("GetThreadUseCase", () => {
       username: "ggwp",
     });
 
-    const getLikeCount = [
-      { comment_id: "comment-_pby2_tmXV6bcvcdev8xk", likecount: "2" },
-      { comment_id: "comment-sopdija98s", likecount: "2" },
-    ];
-
     comment.replies = [repliesExpect];
     comment.likeCount = 2;
-    thread.comments = [comment];
+    comment2.replies = [];
+    comment2.likeCount = 0;
+    thread.comments = [comment, comment2];
     const expectedValue = thread;
 
     const threadId = "thread-123";
@@ -67,6 +71,12 @@ describe("GetThreadUseCase", () => {
             date: "2021-08-08T07:22:33.555Z",
             content: "sebuah comment",
           }),
+          new GetComment({
+            id: "comment-_pby2_tmXV6bcvcdev8asdfa",
+            username: "JOIJ",
+            date: "2021-08-08T07:22:33.555Z",
+            content: "sebuah comment",
+          }),
         ])
       );
     mockRepliesRepository.getReplies = jest.fn().mockImplementation(() =>
@@ -80,9 +90,12 @@ describe("GetThreadUseCase", () => {
         },
       ])
     );
-    mockLikeRepository.getLikeCount = jest
-      .fn()
-      .mockImplementation(() => Promise.resolve(getLikeCount));
+    mockLikeRepository.getLikeCount = jest.fn().mockImplementation(() =>
+      Promise.resolve([
+        { comment_id: "comment-_pby2_tmXV6bcvcdev8xk", likecount: "2" },
+        { comment_id: "comment-sopdija98s", likecount: "2" },
+      ])
+    );
 
     const getThreadUseCase = new GetThreadUseCase({
       threadRepository: mockThreadRepository,
@@ -100,6 +113,7 @@ describe("GetThreadUseCase", () => {
       threadId
     );
     expect(mockRepliesRepository.getReplies).toBeCalledWith(threadId);
+    expect(mockLikeRepository.getLikeCount).toBeCalledWith();
     expect(result).toStrictEqual(expectedValue);
   });
 });
