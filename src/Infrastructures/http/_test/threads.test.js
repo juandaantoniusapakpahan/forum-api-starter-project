@@ -220,7 +220,7 @@ describe("/threads end point", () => {
       expect(response.statusCode).toEqual(200);
       expect(responseJson.status).toEqual("success");
       expect(responseJson.data).not.toEqual(null);
-      expect(responseJson.data.thread.comments).not.toEqual(null);
+      expect(responseJson.data.thread.comments.length).toEqual(1);
       expect(responseJson.data.thread.comments[0].likeCount).toEqual(1);
     });
   });
